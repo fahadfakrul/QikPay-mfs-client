@@ -1,16 +1,39 @@
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import useAxiosPublic from "../Hooks/useAxiosPublic";
+import toast from "react-hot-toast";
 
 const UserRegistration = () => {
+    const axiosPublic =  useAxiosPublic();
+    const navigate = useNavigate()
   const {
     register,
     handleSubmit,
+    reset,
     // watch,
     formState: { errors },
   } = useForm();
 
   const onSubmit = (data) => {
-    console.log(data);
+    const userInfo = {
+        name: data.name,
+        email: data.email,
+        pin: data.pin,
+        number: data.number,
+        status: "pending",
+        balance: 0
+    }
+    axiosPublic.post("/users", userInfo)
+    .then((res)=> {
+        if(res.data.insertedId){
+            reset();
+            toast.success('Registration successful!');
+            navigate('/');
+        }else{
+            toast.error('Registration failed! User may exist already');
+        }
+    })
+    
   };
   return (
     <div>
@@ -59,7 +82,7 @@ const UserRegistration = () => {
               />
             </div>
             {errors.password?.type === "required" && (
-              <span className="">This field is required</span>
+              <span className="text-red-500">This field is required</span>
             )}
             <div className="form-control">
               <label className="label">
@@ -67,10 +90,9 @@ const UserRegistration = () => {
               </label>
               <input
                 type="password"
-                {...register("password", {
+                {...register("pin", {
                   required: true,
-                  minLength: 5,
-                  maxLength: 5,
+                  pattern: /^[0-9]{5}$/,
                 })}
                 placeholder="*****"
                 className="input input-bordered rounded-full"
@@ -81,21 +103,19 @@ const UserRegistration = () => {
             <a href="#" className="label-text-alt link link-hover">Forgot password?</a>
           </label> */}
             </div>
-            {errors.password?.type === "required" && (
-              <span className="">This field is required</span>
+            {errors.pin?.type === "required" && (
+              <span className="text-red-500">This field is required</span>
             )}
-            {errors.password?.type === "minLength" && (
-              <span className="">The minimum length is 5</span>
+            {errors.pin?.type === "pattern" && (
+              <span className="text-red-500">The pin should be a number and of 5 digits.</span>
             )}
-            {errors.password?.type === "maxLength" && (
-              <span className="">The maximum length is 5</span>
-            )}
+            
             <div className="form-control">
               <label className="label">
                 <span className="label-text">Mobile No.</span>
               </label>
               <input
-                type="email"
+                type="number"
                 placeholder="mobile number"
                 {...register("number", { required: true })}
                 className="input input-bordered rounded-full"
@@ -103,7 +123,7 @@ const UserRegistration = () => {
               />
             </div>
             {errors.password?.type === "required" && (
-              <span className="">This field is required</span>
+              <span className="text-red-500">This field is required</span>
             )}
             <div className="form-control">
               <label className="label">
@@ -118,7 +138,7 @@ const UserRegistration = () => {
               />
             </div>
             {errors.password?.type === "required" && (
-              <span className="">This field is required</span>
+              <span className="text-red-500">This field is required</span>
             )}
             <div className="form-control mt-6">
               <button
