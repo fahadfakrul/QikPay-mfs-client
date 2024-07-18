@@ -4,7 +4,6 @@ import User from "../Layouts/User";
 import Agent from "../Layouts/Agent";
 import Admin from "../Layouts/Admin";
 import UserRegistration from "../Components/UserRegistration";
-import AdminRegister from "../Components/AdminRegister";
 import AgentRegister from "../Components/AgentRegister";
 import UserLogin from "../Components/UserLogin";
 import AgentLogin from "../Components/AgentLogin";
@@ -17,7 +16,6 @@ export const router = createBrowserRouter([
     children: [
         { path: "/", element: <UserLogin></UserLogin> },
       { path: "/userregistration", element: <UserRegistration></UserRegistration> },
-      { path: "/adminregistration", element: <AdminRegister></AdminRegister> },
       { path: "/agentregistration", element: <AgentRegister></AgentRegister> },
       { path: "/agentlogin", element: <AgentLogin></AgentLogin> },
       { path: "/adminlogin", element: <AdminLogin></AdminLogin> },
